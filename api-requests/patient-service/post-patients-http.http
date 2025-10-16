@@ -3,7 +3,7 @@ POST http://localhost:4000/patients
 Content-Type: application/json
 
 {
-  "name": "Umang prajapati",
+  "name": "Umang",
   "email": "umang_with_billing@gmail.com",
   "address": "123 Ambedkar Road",
   "dateOfBirth": "1990-01-01",
