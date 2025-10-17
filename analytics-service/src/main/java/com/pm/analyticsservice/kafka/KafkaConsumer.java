@@ -1,3 +1,4 @@
+// java
 package com.pm.analyticsservice.kafka;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -11,19 +12,24 @@ import patient.events.PatientEvent;
 public class KafkaConsumer {
     private static final Logger log = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    @KafkaListener(topics="patient",groupId="analytics-service")
+    @KafkaListener(topics = "patient", groupId = "analytics-service")
     public void consumeEvent(byte[] eventBytes) {
-        // Here you would typically deserialize the eventBytes and process the event.
-        // For simplicity, we'll just log that we've received an event.
-        System.out.println("Received Kafka event: " + new String(eventBytes));
-        try {
-            PatientEvent patientEvent=PatientEvent.parseFrom(eventBytes);
-            // ... perform any bussiness related to analytics here
-            log.info("Received Patient Event: " + patientEvent.toString());
-        } catch (InvalidProtocolBufferException e) {
-            log.error("Error while parsing Kafka event", e.getMessage());
+        if (eventBytes == null || eventBytes.length == 0) {
+            log.warn("RECEIVED EMPTY KAFKA PAYLOAD");
+            return;
         }
 
-
+        try {
+            PatientEvent patientEvent = PatientEvent.parseFrom(eventBytes);
+            log.info("RECEIVED PATIENT EVENT: ID={} NAME={} TYPE={}",
+                    patientEvent.getPatientId(),
+                    patientEvent.getName(),
+                    patientEvent.getEventType());
+            // ... perform business logic here
+        } catch (InvalidProtocolBufferException e) {
+            log.error("FAILED TO PARSE PATIENTEVENT PROTOBUF", e);
+        } catch (Exception e) {
+            log.error("UNEXPECTED ERROR PROCESSING PATIENT EVENT", e);
+        }
     }
 }
