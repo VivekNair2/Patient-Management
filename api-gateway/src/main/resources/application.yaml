@@ -24,6 +24,8 @@ spring:
             - Path=/api/patients/**
           filters:
             - StripPrefix=1
+            - JwtValidation   #The first half should match with the GatewayFactory
+
 
         - id: api-docs-patient-route
           uri: http://patient-service:4000
