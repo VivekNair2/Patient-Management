@@ -1,11 +1,15 @@
 
 package com.pm.authservice.util;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.management.JMException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
@@ -63,5 +67,20 @@ public class JwtUtil {
                 .expiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith((SecretKey) secretKey)
+                    .build()
+                    .parseSignedClaims(token);
+
+        }
+        catch (SignatureException ex) {
+            throw new JwtException("Invalid JWT Signature");
+        }
+        catch(JwtException ex) {
+            throw new JwtException("Invalid JWT Token: " + ex.getMessage());
+        }
     }
 }

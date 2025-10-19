@@ -27,4 +27,13 @@ public class AuthService {
                                .map(u->jwtUtil.generateToken(u.getEmail(),u.getRole()));
         return token;
     }
+
+    public boolean validateToken(String token){
+        try{
+            jwtUtil.validateToken(token);
+            return true;
+        }catch(Exception ex){
+            return false;
+        }
+    }
 }
