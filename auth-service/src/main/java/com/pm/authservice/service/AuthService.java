@@ -1,15 +1,24 @@
 package com.pm.authservice.service;
 
 import com.pm.authservice.dto.LoginRequestDTO;
+import com.pm.authservice.util.JwtUtil;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.pm.authservice.model.User;
 import java.util.Optional;
 
+
 @Service
 public class AuthService {
     private final UserService userService;
-    public AuthService(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil=jwtUtil;
         this.userService = userService;
+
     }
     public Optional<String> authenticate(LoginRequestDTO loginRequestDTO){
         // Dummy implementation for illustration
